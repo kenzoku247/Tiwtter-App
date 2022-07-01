@@ -1,28 +1,32 @@
 import UserModel from "../Models/UserModel.js";
 import bcrypt from 'bcrypt';
+import jwt from "jsonwebtoken";
 
 // Register
 export const registerUser = async(req, res) => {
-    const {username, password, firstName, lastName} = req.body;
+    const salt = await bcrypt.genSalt(10);
+  const hashedPass = await bcrypt.hash(req.body.password, salt);
+  req.body.password = hashedPass
+  const newUser = new UserModel(req.body);
+  const {username} = req.body
+  try {
+    // addition new
+    const oldUser = await UserModel.findOne({ username });
 
-    const salt = await bcrypt.genSalt(10)
-    const hashedPass = await bcrypt.hash(password, salt)
-    
-    const newUser = new UserModel(
-        {
-            username,
-            password:hashedPass,
-            firstName,
-            lastName
-        }
-    )
+    if (oldUser)
+      return res.status(400).json({ message: "User already exists" });
 
-    try {
-        await newUser.save()
-        res.status(200).json(newUser)
-    } catch (error) {
-        res.status(500).json({message: error.message})
-    }
+    // changed
+    const user = await newUser.save();
+    const token = jwt.sign(
+      { username: user.username, id: user._id },
+      process.env.JWT_KEY,
+      { expiresIn: "1h" }
+    );
+    res.status(200).json({ user, token });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 }
 
 // Login
@@ -32,10 +36,20 @@ export const loginUser = async (req, res) => {
     try {
         const user = await UserModel.findOne({username: username})
         if (user){
-            const validity = await bcrypt.compare(password, user.password)
-            validity ? res.status(200).json(user) : res.status(400).json("Wrong password")
+            const validity = await bcrypt.compare(password, user.password);
+
+        if (!validity) {
+            res.status(400).json("wrong password");
         } else {
-            res.status(404).json("User does not exists")
+            const token = jwt.sign(
+            { username: user.username, id: user._id },
+            process.env.JWT_KEY,
+            { expiresIn: "1h" }
+            );
+            res.status(200).json({ user, token });
+        }
+        } else {
+        res.status(404).json("User not found");
         }
     } catch (error) {
         res.status(500).json({message: error.message})

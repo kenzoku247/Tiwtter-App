@@ -3,16 +3,49 @@ import './Auth.css'
 import Logo from '../../img/logo.png'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { login, signup } from '../../redux/actions/AuthAction'
 
 const Auth = () => {
-
+    const dispatch = useDispatch()
+    const loading = useSelector((state)=>state.authReducer.loading)
     const [isSignUp, setIsSignUp] = useState(false)
 
-    const [data, setData] = useState({firstName: "", lastName: "", password: "", confirmPassword: "", username: ""})
+    const [data, setData] = useState({
+        firstName: "", 
+        lastName: "", 
+        password: "", 
+        confirmPassword: "", 
+        username: ""
+    })
 
+    const [confirmPass, setConfirmPass] = useState(true)
     const handleChange = (e) => {
         setData({...data, [e.target.name]: e.target.value})
     }
+    const handleSubmit = (e) => {
+        e.preventDefault()
+
+        if(isSignUp) {
+            data.password === data.confirmPassword 
+            ? dispatch(signup(data)) 
+            : setConfirmPass(false)
+        } else {
+                dispatch(login(data))
+        }
+    }
+
+    const resetPForm = () => {
+        setConfirmPass(true);
+        setData({
+            firstName: "", 
+            lastName: "", 
+            password: "", 
+            confirmPassword: "", 
+            username: ""
+        });
+    }
+
   return (
     <div className='Auth'>
         {/* Left Side */}
@@ -27,7 +60,7 @@ const Auth = () => {
 
         {/* Right Side */}
         <div className="Auth-right">
-            <form action="" className="InfoForm AuthForm">
+            <form action="" className="InfoForm AuthForm" onSubmit={handleSubmit}>
                 <h3>{isSignUp ? "Sign Up" : "Log In"}</h3>
                 {isSignUp && 
                     <div>
@@ -36,12 +69,14 @@ const Auth = () => {
                         className='InfoInput'
                         name='firstName'
                         onChange={handleChange}
+                        value={data.firstName}
                         />
                         <input type="text" 
                         placeholder='Last Name' 
                         className='InfoInput'
                         name='lastName'
                         onChange={handleChange}
+                        value={data.lastName}
                         />
                     </div>
                 }
@@ -52,6 +87,7 @@ const Auth = () => {
                     className='InfoInput'
                     name='username'
                     onChange={handleChange}
+                    value={data.username}
                     />
                 </div>
                 <div>
@@ -60,6 +96,7 @@ const Auth = () => {
                     className='InfoInput'
                     name='password'
                     onChange={handleChange}
+                    value={data.password}
                     />
                     {isSignUp &&
                         <input type="password" 
@@ -67,18 +104,31 @@ const Auth = () => {
                         className='InfoInput'
                         name='confirmPassword'
                         onChange={handleChange}
+                        value={data.confirmPassword}
                         />
                     }
                     
                 </div>
+                
+                <span style={{
+                    display: confirmPass ? "none" : "block", 
+                    color: 'red', 
+                    fontSize: '12px',
+                    alignSelf: 'flex-end',
+                    marginRight: '5px'}}>
+                    * Confirm Password is not same
+                </span>
+                
 
                 <div>
                     <span style={{fontSize: '12px', cursor: 'pointer'}} 
-                        onClick = { () => setIsSignUp((prev) => !prev)}>
+                        onClick = { () => {setIsSignUp((prev) => !prev); resetPForm()}}>
                         {isSignUp ? "Already have an account. Login now!" : "Don't have an account. Sign up now!"}
                     </span>
                 </div>
-                <button className="button InfoButton" type='submit'>{isSignUp ? "Signup" : "Login"}</button>
+                <button className="button InfoButton" type='submit' disabled={loading}>
+                    {loading ? "Loading..." : isSignUp ? "Signup" : "Login"}
+                </button>
             </form>
         </div>
 

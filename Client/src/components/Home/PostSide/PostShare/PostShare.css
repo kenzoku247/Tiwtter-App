@@ -6,7 +6,7 @@
     border-radius: 1rem;
 }
 
-.PostShare>img{
+.PostShare>a>img{
     border-radius: 50%;
     width: 3rem;
     height: 3rem;
