@@ -122,11 +122,19 @@ const Auth = () => {
 
                 <div>
                     <span style={{fontSize: '12px', cursor: 'pointer'}} 
-                        onClick = { () => {setIsSignUp((prev) => !prev); resetPForm()}}>
+                        onClick = { () => {
+                            resetPForm()
+                            setIsSignUp((prev) => !prev); 
+                        }}
+                    >
                         {isSignUp ? "Already have an account. Login now!" : "Don't have an account. Sign up now!"}
                     </span>
                 </div>
-                <button className="button InfoButton" type='submit' disabled={loading}>
+                <button 
+                    className="button InfoButton" 
+                    type='submit' 
+                    disabled={loading}
+                >
                     {loading ? "Loading..." : isSignUp ? "Signup" : "Login"}
                 </button>
             </form>
