@@ -1,7 +1,7 @@
 import React from 'react'
 import './Auth.css'
 import Logo from '../../img/logo.png'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { login, signup } from '../../redux/actions/AuthAction'
@@ -9,41 +9,41 @@ import { login, signup } from '../../redux/actions/AuthAction'
 const Auth = () => {
     const dispatch = useDispatch()
     const loading = useSelector((state)=>state.authReducer.loading)
+    
+    const navigate = useNavigate();
     const [isSignUp, setIsSignUp] = useState(false)
 
-    const [data, setData] = useState({
+    const initialState = {
         firstName: "", 
         lastName: "", 
         password: "", 
         confirmPassword: "", 
         username: ""
-    })
+    }
+
+    const [data, setData] = useState(initialState)
 
     const [confirmPass, setConfirmPass] = useState(true)
+
     const handleChange = (e) => {
         setData({...data, [e.target.name]: e.target.value})
     }
     const handleSubmit = (e) => {
+        setConfirmPass(true);
         e.preventDefault()
 
         if(isSignUp) {
             data.password === data.confirmPassword 
-            ? dispatch(signup(data)) 
+            ? dispatch(signup(data, navigate)) 
             : setConfirmPass(false)
         } else {
-                dispatch(login(data))
+            dispatch(login(data, navigate))
         }
     }
 
     const resetPForm = () => {
-        setConfirmPass(true);
-        setData({
-            firstName: "", 
-            lastName: "", 
-            password: "", 
-            confirmPassword: "", 
-            username: ""
-        });
+        setData(initialState);
+        setConfirmPass(confirmPass);
     }
 
   return (

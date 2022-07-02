@@ -9,14 +9,11 @@ import { useEffect } from 'react'
 import * as UserApi from '../../../redux/api/UserRequest.js';
 import { logout } from '../../../redux/actions/AuthAction';
 const InfoCard = () => {
-
     const [modalOpened, setModalOpened] = useState(false)
     const dispatch = useDispatch()
     const params = useParams()
-
     const profileUserId = params.id 
     const [profileUser, setProfileUser] = useState({})
-
     const { user } = useSelector((state) => state.authReducer.authData)
 
     useEffect(() => {
@@ -81,6 +78,15 @@ const InfoCard = () => {
             </span>
             <span>
                 {profileUser.worksAt}
+            </span>
+        </div>
+
+        <div className="Info">
+            <span>
+                <b>Country </b>
+            </span>
+            <span>
+                {profileUser.country}
             </span>
         </div>
 

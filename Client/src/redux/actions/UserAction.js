@@ -4,7 +4,7 @@ export const updateUser = (id, formData) => async(dispatch) => {
     dispatch({type: "UPDATING_START"})
     try {
         const {data} = await UserApi.updateUser(id, formData)
-        dispatch({type: "UPDATING_SUCCESS", data:data})
+        dispatch({type: "UPDATING_SUCCESS", data: data})
     } catch (error) {
         console.log(error);
         dispatch({type: "UPDATING_FAIL"})
@@ -12,7 +12,7 @@ export const updateUser = (id, formData) => async(dispatch) => {
 }
 
 export const followUser = (id, data) => async(dispatch) => {
-    dispatch({type: "FOLLOW_USER"})
+    dispatch({type: "FOLLOW_USER", data:id})
     UserApi.followUser(id,data)
     // try {
     //     dispatch({type: "FOLLOWING_SUCCESS"})

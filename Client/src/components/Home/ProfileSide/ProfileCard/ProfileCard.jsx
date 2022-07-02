@@ -10,7 +10,6 @@ const ProfileCard = ({location}) => {
     const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
     const posts = useSelector((state)=>state.postReducer.posts);
 
-    const ProfilePage = false;
   return (
     <div className='ProfileCard'>
         <div className="ProfileImages">
@@ -26,15 +25,15 @@ const ProfileCard = ({location}) => {
             <hr />
             <div>
                 <div className="Follow">
-                    <span>{user.followers.length}</span>
-                    <span>{user.followers.length > 1 ? "Followings" : "Following"}</span>
+                    <span>{user.followings.length}</span>
+                    <span>{user.followings.length > 1 ? "Followings" : "Following"}</span>
                 </div>
                 <div className="vl">
                 
                 </div>
                 <div className="Follow">
-                    <span>{user.followings.length}</span>
-                    <span>{user.followings.length > 1 ? "Followers" : "Follower"}</span>
+                    <span>{user.followers.length}</span>
+                    <span>{user.followers.length > 1 ? "Followers" : "Follower"}</span>
                 </div>
 
                 {location === "profilePage" && (

@@ -3,10 +3,9 @@ import dotenv from "dotenv"
 
 dotenv.config()
 const secret = process.env.JWT_KEY;
-const authMiddleware = async(req,res,next) => {
+const authMiddleware = async (req,res,next) => {
     try {
-        const token = req.headers.Authorization.split(" ")[1];
-        console.log(req.headers.Authorization);
+        const token = req.headers.authorization.split(" ")[1];
         if(!token) return res.status(400).json({msg: "Invalid Authentication."})
 
         if (token) {

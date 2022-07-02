@@ -18,7 +18,8 @@ const authReducer = (state = initialState, action) => {
             return {
                 ...state, 
                 authData: action.data,
-                loading: false
+                loading: false,
+                error: false
             };
         case "AUTH_FAIL":
             return {
@@ -53,7 +54,7 @@ const authReducer = (state = initialState, action) => {
                     ...state.authData, 
                     user: {
                         ...state.authData.user, 
-                        following: [
+                        followings: [
                             ...state.authData.user.followings, 
                             action.data
                         ]
@@ -68,7 +69,7 @@ const authReducer = (state = initialState, action) => {
                     ...state.authData, 
                     user: {
                         ...state.authData.user, 
-                        following: [
+                        followings: [
                             ...state.authData.user.followings.filter((personId)=>personId!==action.data)
                         ]
                     } 
@@ -80,7 +81,8 @@ const authReducer = (state = initialState, action) => {
                 ...state,
                 authData: null,
                 loading: false,
-                error: false
+                error: false,
+                updateLoading: false
             };
         default:
             return state;

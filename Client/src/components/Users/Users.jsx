@@ -2,20 +2,20 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { followUser, unfollowUser } from '../../redux/actions/UserAction';
 
-const Users = ({person, }) => {
+const Users = ({person }) => {
     const dispatch = useDispatch()
     const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
     const {user} = useSelector((state)=>state.authReducer.authData)
 
-    const [following, setFollowing] = useState(
+    const [followings, setFollowings] = useState(
         person.followers.includes(user._id)
       );
     
     const handleFollow = () => {
-        following
+        followings
       ? dispatch(unfollowUser(person._id, user))
       : dispatch(followUser(person._id, user));
-        setFollowing((prev) => !prev);
+        setFollowings((prev) => !prev);
     }
 
   return (
@@ -37,11 +37,11 @@ const Users = ({person, }) => {
         </div>
         <button
             className={
-                following ? "button fc-button UnfollowButton" : "button fc-button"
+                followings ? "button fc-button UnfollowButton" : "button fc-button"
             }
             onClick={handleFollow}
         >
-        {following ? "Unfollow" : "Follow"}
+        {followings ? "Unfollow" : "Follow"}
       </button>
     </div>
   )
